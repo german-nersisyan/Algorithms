@@ -1,0 +1,122 @@
+#include <iostream>
+
+template <typename T>
+class Queue {
+
+public:
+
+	virtual bool empty() const = 0;
+	virtual bool full() const = 0;
+	virtual std::size_t length() const = 0;
+	virtual const T& front() const = 0;
+	virtual void dequeue() = 0;
+	virtual void enqueue(const T&) = 0;
+
+};
+
+template <typename T>
+class CircularQueue : Queue<T> {
+
+public:
+
+	CircularQueue() : m_capacity(10), m_size(0)
+	{
+		m_front = m_rear = -1;
+		m_queue = new T[m_capacity];
+	}
+
+	CircularQueue(const T& other) {}
+	CircularQueue& operator=(const T& other) {}
+
+	CircularQueue(T&& other) {}
+	CircularQueue& operator=(T&& other) {}
+
+	~CircularQueue()
+	{
+		delete[] m_queue;
+	}
+
+	bool empty() const override
+	{
+		return m_size == 0;
+	}
+
+	bool full() const override
+	{
+		return m_size == m_capacity;
+	}
+
+	const T& front() const override
+	{
+		if(empty()) {
+			throw("runtime exception");
+		}
+
+		return m_queue[m_front];
+	}
+
+	void enqueue(const T& value) override
+	{
+		if(full()) {
+			return;
+		}
+
+		if(empty()) {
+			m_front = m_rear = 0;
+		}
+		else {
+			m_rear = (m_rear + 1) % m_capacity;
+		}
+
+		m_queue[m_rear] = value;
+		m_size++;
+	}
+
+	void dequeue() override
+	{
+		if(empty()) {
+			return;
+		}
+
+		if(m_front == m_rear) {
+			m_front = m_rear = -1;
+		}
+		else {
+			m_front = (m_front + 1) % m_capacity;
+		}
+
+		m_size--;
+	}
+
+	std::size_t length() const override
+	{
+		return m_size;
+	}
+
+private:
+
+	T* m_queue;
+	int m_front, m_rear;
+	std::size_t m_capacity, m_size;
+
+};
+
+int main()
+{
+	CircularQueue<int> q;
+	q.enqueue(6);
+	q.enqueue(3);
+	q.enqueue(5);
+	q.enqueue(8);
+
+	std::cout << q.length() << std::endl;
+	
+	while(!q.empty()) {
+	    std::cout << q.front() << " ";
+	    q.dequeue();
+	}
+	
+	std::cout << std::endl;
+	std::cout << q.length() << std::endl;
+	return 0;
+}
