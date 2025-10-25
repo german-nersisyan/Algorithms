@@ -136,6 +136,21 @@ public:
     {
         return size;
     }
+
+    void swap(ArrayStack& other)
+    {
+        T* temp_arr = arr;
+        arr = other.arr;
+        other.arr = temp_arr;
+
+        size_t temp_size = size;
+        size = other.size;
+        other.size = temp_size;
+
+        size_t temp_capacity = capacity;
+        capacity = other.capacity;
+        other.capacity = temp_capacity;
+    }
 };
 
 int main()

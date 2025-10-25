@@ -42,7 +42,8 @@ public:
 		other.m_rear = -1;
 	}
 
-	ArrayQueue& operator=(const ArrayQueue& other) {
+	ArrayQueue& operator=(const ArrayQueue& other)
+	{
 		if (this != &other) {
 			delete[] m_queue;
 
@@ -60,7 +61,8 @@ public:
 		return *this;
 	}
 	
-	ArrayQueue& operator=(ArrayQueue&& other) noexcept {
+	ArrayQueue& operator=(ArrayQueue&& other) noexcept
+	{
         if (this != &other) {
             delete[] m_queue;
             

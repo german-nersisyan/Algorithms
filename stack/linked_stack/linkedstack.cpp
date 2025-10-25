@@ -132,6 +132,13 @@ public:
             pop();
         }
     }
+
+    void swap(LinkedStack& other)
+    {
+        Node<T>* temp = m_top;
+        m_top = other.m_top;
+        other.m_top = temp;
+    }
     
 private:
 
