@@ -25,11 +25,58 @@ public:
 		m_queue = new T[m_capacity];
 	}
 
-	CircularQueue(const T& other) {}
-	CircularQueue& operator=(const T& other) {}
+	CircularQueue(const T& other) : m_capacity(other.m_capacity), m_size(other.m_size), m_front(other.m_front), m_rear(other.m_rear)
+    {
+        m_queue = new T[m_capacity];
+        for(std::size_t i = 0; i < m_capacity; i++) {
+            m_queue[i] = other.m_queue[i];
+        }
+    }
 
-	CircularQueue(T&& other) {}
-	CircularQueue& operator=(T&& other) {}
+	CircularQueue& operator=(const T& other)
+    {
+        if(this != &other) {
+           delete[] m_queue;
+           
+           m_capacity = other.m_capacity;
+           m_size = other.m_size;
+           m_front = other.m_front;
+           m_rear = other.m_rear;
+
+           m_queue = new T[m_capacity];
+           for(std::size_t i = 0; i < m_capacity; i++) {
+               m_queue[i] = other.m_queue[i];
+            }
+        }
+
+        return *this;
+    }
+
+	CircularQueue(T&& other) : m_queue(other.m_queue), m_capacity(other.m_capacity), m_size(other.m_size), m_front(other.m_front), m_rear(other.m_rear)
+    {
+        other.m_queue = nullptr;
+        other.m_size = 0;
+        other.m_front = other.m_rear = -1;
+        other.m_capacity = 0;
+    }
+
+	CircularQueue& operator=(T&& other)
+    {
+        if(this != &other) {
+            m_queue = other.m_queue;
+            m_capacity = other.m_capacity;
+            m_size = other.m_size;
+            m_front = other.m_front;
+            m_rear = other.m_rear;
+
+            other.m_queue = nullptr;
+            other.m_size = 0;
+            other.m_front = other.m_rear = -1;
+            other.m_capacity = 0;
+        }
+
+        return *this;
+    }
 
 	~CircularQueue()
 	{
@@ -92,6 +139,29 @@ public:
 	{
 		return m_size;
 	}
+
+    void swap(CircularQueue& other)
+    {
+        T* temp_queue = m_queue;
+        m_queue = other.m_queue;
+        other.m_queue = temp_queue;
+
+        int temp_front = m_front;
+        m_front = other.m_front;
+        other.m_front = temp_front;
+
+        int temp_rear = m_rear;
+        m_rear = other.m_rear;
+        other.m_rear = temp_rear;
+
+        std::size_t temp_size = m_size;
+        m_size = other.m_size;
+        other.m_size = temp_size;
+
+        std::size_t temp_capacity = m_capacity;
+        m_capacity = other.m_capacity;
+        other.m_capacity = temp_capacity;
+    }
 
 private:
 
